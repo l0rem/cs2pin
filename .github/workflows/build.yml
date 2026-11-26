@@ -30,4 +30,5 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --notes "Built from $GITHUB_SHA by this workflow. SHA-256 of the exe in cs2pin.exe.sha256. Install: download cs2pin.exe and install.ps1 into one folder and run install.ps1 from an elevated PowerShell (see README)."
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --notes "Built from $GITHUB_SHA by this workflow. SHA-256 of the exe in cs2pin.exe.sha256. Install: download cs2pin.exe and install.ps1 into one folder and run install.ps1 from an elevated PowerShell (see README)."
