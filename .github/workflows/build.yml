@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-2025
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: rustup component add rustfmt clippy
       - run: cargo fmt --check
       - run: cargo clippy --release --locked -- -D warnings
@@ -21,7 +21,7 @@ jobs:
           mkdir dist
           cp target/release/cs2pin.exe windows/install.ps1 windows/uninstall.ps1 windows/check.ps1 dist/
           cd dist && sha256sum cs2pin.exe | tee cs2pin.exe.sha256
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: cs2pin
           path: dist/*
