@@ -1,0 +1,29 @@
+[package]
+name = "cs2pin"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Tiny Windows tray app that keeps Counter-Strike 2 off CPU 0 (one thread per core). Replaces a Process Lasso rule."
+license = "MIT"
+repository = "https://github.com/l0rem/cs2pin"
+
+[dependencies]
+windows-sys = { version = "0.59", features = [
+  "Win32_Foundation",
+  "Win32_Graphics_Gdi",
+  "Win32_Security",
+  "Win32_System_Diagnostics_ToolHelp",
+  "Win32_System_LibraryLoader",
+  "Win32_System_Registry",
+  "Win32_System_SystemInformation",
+  "Win32_System_Threading",
+  "Win32_UI_Shell",
+  "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

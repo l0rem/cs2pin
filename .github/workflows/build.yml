@@ -1,0 +1,33 @@
+name: build
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup component add rustfmt clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --release --locked -- -D warnings
+      - run: cargo build --release --locked
+      - name: Collect
+        shell: bash
+        run: |
+          mkdir dist
+          cp target/release/cs2pin.exe windows/install.ps1 windows/uninstall.ps1 windows/check.ps1 dist/
+          cd dist && sha256sum cs2pin.exe | tee cs2pin.exe.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cs2pin
+          path: dist/*
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --notes "Built from $GITHUB_SHA by this workflow. SHA-256 of the exe in cs2pin.exe.sha256. Install: download cs2pin.exe and install.ps1 into one folder and run install.ps1 from an elevated PowerShell (see README)."
